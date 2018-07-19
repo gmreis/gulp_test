@@ -26,7 +26,7 @@ function incrementVersion(importance) {
         // save it back to filesystem
         .pipe(gulp.dest('./'))
         // commit the changed version number
-        .pipe(git.commit('New FTT version [ci skip]'))
+        .pipe(git.commit('New version'))
         // read only one file to get the version number
         .pipe(filter('package.json'))
         // **tag it in the repository**
