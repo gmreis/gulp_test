@@ -40,3 +40,138 @@ function incrementVersion(importance) {
 gulp.task('patch', () => incrementVersion('patch'));
 gulp.task('feature', () => incrementVersion('minor'));
 gulp.task('release', () => incrementVersion('major'));
+
+
+const buildImageName = () => {
+    var pkg = require('./package.json');
+    const dockerRegistry = pkg.dockerRegistry;
+
+    
+    const port = dockerRegistry.port ? dockerRegistry.port : '';
+    const group = dockerRegistry.group ? dockerRegistry.group : '';
+    const host = dockerRegistry.host ? dockerRegistry.host : '';
+
+    let imageName = '';
+    if (host && port) {
+        imageName = `${host}:${port}/`;
+    } else if (host) {
+        imageName = `${host}/`;
+    }
+
+    if (group) {
+        imageName += `${group}/`;
+    }
+
+    imageName += `${pkg.name}:${pkg.version}`
+
+    
+    return imageName;
+}
+
+const spawn = require('child_process').spawn;
+const execCommand = (cb, ...args) => {
+    const exec = spawn(...args);
+    exec.stdout.on('data', function (data) {
+        console.log(data.toString());
+    });
+
+    exec.stderr.on('data', (data) => {
+        console.log(data.toString());
+    });
+
+    exec.on('close', function (code) {
+        if (code) {
+            console.error('Erro ao fazer Commando');
+            return;
+        }
+
+        console.log('Executado =]');
+
+        if (cb) {
+            cb(code);
+        }
+    });
+}
+
+
+const dockerBuild = (cb) => {
+
+    const image = buildImageName();
+    
+    console.log('Buildando imagem' + image);
+
+    execCommand(cb, 'docker', ['build', '.', '-t', image]);
+};
+
+const dockerPublish = (cb) => {
+
+    const image = buildImageName();
+
+    console.log('Publicando a imagem: ', image);
+
+
+    execCommand(cb, 'docker', ['push', image]);
+}
+
+/*
+
+const dockerBuild = (cb) => {
+
+    const image = buildImageName();
+    
+    console.log('Buildando imagem' + image);
+
+    const build = spawn('docker', ['build', '.', '-t', image]);
+    build.stdout.on('data', function (data) {
+        console.log(data.toString());
+    });
+
+    build.stderr.on('data', (data) => {
+        console.log(data.toString());
+    });
+
+    build.on('close', function (code) {
+        if (code) {
+            console.error('Erro ao fazer o Build do Docker');
+            return;
+        }
+        console.log('Imagem Buildada =]');
+
+        if (cb) {
+            cb(code);
+        }
+    });
+}
+
+const dockerPublish = (cb) => {
+
+    const image = buildImageName();
+
+    console.log('Publicando a imagem: ', image);
+
+
+    const push = spawn('docker', ['push', image]);
+    push.stdout.on('data', function (data) {
+        console.log(data.toString());
+    });
+
+    push.stderr.on('data', (data) => {
+        console.log(data.toString());
+    });
+
+    push.on('close', function (code) {
+        if (code) {
+            console.error('Erro ao Publicar a imagem');
+            return;
+        }
+
+        console.log('Imagem publicada!!! =]');
+
+        if (cb) {
+            cb(code);
+        }
+    });
+}
+*/
+gulp.task('docker-build', dockerBuild);
+gulp.task('docker-publish', ['docker-build'], dockerPublish);

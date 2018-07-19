@@ -1,10 +1,15 @@
 {
   "name": "gulp_test",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "",
   "main": "index.js",
+  "dockerRegistry": {
+    "host": "docker.io",
+    "port": null,
+    "group": "gmreis"
+  },
   "scripts": {
-    "start": "nodejs index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,8 +24,10 @@
   "homepage": "https://github.com/gmreis/gulp_test#readme",
   "dependencies": {},
   "devDependencies": {
+    "ezdocker": "^1.0.3",
     "gulp": "^3.9.1",
     "gulp-bump": "^3.1.1",
+    "gulp-docker": "0.0.12",
     "gulp-filter": "^5.1.0",
     "gulp-git": "^2.7.0",
     "gulp-tag-version": "^1.3.1"
