@@ -38,5 +38,5 @@ function incrementVersion(importance) {
 }
 
 gulp.task('patch', () => incrementVersion('patch'));
-gulp.task('minor', () => incrementVersion('minor'));
-gulp.task('major', () => incrementVersion('major'));
+gulp.task('feature', () => incrementVersion('minor'));
+gulp.task('release', () => incrementVersion('major'));
