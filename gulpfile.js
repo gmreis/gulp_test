@@ -20,7 +20,7 @@ const tagVersion = require('gulp-tag-version');
  */
 function incrementVersion(importance) {
     // get all the files to bump version in
-    gulp.src(['./package.json'])
+    return gulp.src(['./package.json'])
         // bump the version number in those files
         .pipe(bump({ type: importance }))
         // save it back to filesystem
