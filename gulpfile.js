@@ -20,7 +20,7 @@ const tagVersion = require('gulp-tag-version');
  */
 function incrementVersion(importance) {
     // get all the files to bump version in
-    return gulp.src(['./package.json'])
+    gulp.src(['./package.json'])
         // bump the version number in those files
         .pipe(bump({ type: importance }))
         // save it back to filesystem
@@ -41,6 +41,11 @@ gulp.task('patch', () => incrementVersion('patch'));
 gulp.task('feature', () => incrementVersion('minor'));
 gulp.task('release', () => incrementVersion('major'));
 
+const Show = (cb) => {
+    console.log('Teste: Image!');
+};
+
+gulp.task('test', ['patch'] , Show());
 
 const buildImageName = () => {
     var pkg = require('./package.json');
